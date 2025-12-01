@@ -1111,3 +1111,10 @@ if get_option('tests').enabled()
 endif
 
 install_headers(hb_headers + hb_subset_headers, subdir: meson.project_name())
+
+executable('info', 'info.cc',
+    include_directories: incconfig,
+    cpp_args: cpp_args + ['-DMAIN', '-UNDEBUG'],
+    dependencies: libharfbuzz_dep,
+    install: false,
+)

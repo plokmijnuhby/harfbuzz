@@ -1791,8 +1791,7 @@ static inline void apply_lookup (hb_ot_apply_context_t *c,
 			  buffer->idx);
     }
 
-    if (!c->recurse (lookupRecord[i].lookupListIndex))
-      continue;
+    bool recursed_successfully = c->recurse (lookupRecord[i].lookupListIndex);
 
     if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
     {
@@ -1802,6 +1801,9 @@ static inline void apply_lookup (hb_ot_apply_context_t *c,
 			  "recursed to lookup %u",
 			  (unsigned) lookupRecord[i].lookupListIndex);
     }
+
+    if (!recursed_successfully)
+      continue;
 
     unsigned int new_len = buffer->backtrack_len () + buffer->lookahead_len ();
     int delta = new_len - orig_len;

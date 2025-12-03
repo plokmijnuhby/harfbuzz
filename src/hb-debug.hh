@@ -446,7 +446,7 @@ struct hb_no_trace_t {
 
 
 #ifndef HB_BUFFER_MESSAGE_MORE
-#define HB_BUFFER_MESSAGE_MORE (HB_DEBUG+0)
+#define HB_BUFFER_MESSAGE_MORE 1
 #endif
 
 

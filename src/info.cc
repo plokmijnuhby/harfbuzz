@@ -7,8 +7,9 @@
 
 #define CHARS 2000
 
-unsigned int debugged_lookup_id, window, recursion_depth, next_recursion_depth = 0;
-bool debugging = false;
+unsigned int debugged_lookup_id, window = 0;
+int recursion_depth = 0;
+int next_recursion_depth = -1;
 unsigned int indices[64] = {0};
 
 static hb_bool_t trace(
@@ -21,32 +22,27 @@ static hb_bool_t trace(
     bool exiting =
         sscanf_s(message, "recursed to lookup %u", &lookup)
         || sscanf_s(message, "end lookup %u", &lookup);
-    indices[recursion_depth+1] = current_index;
+    indices[recursion_depth] = current_index;
     
-    if (debugging && recursion_depth == next_recursion_depth) {
+    if (entering && lookup == debugged_lookup_id) {
+        next_recursion_depth = recursion_depth + 1;
+    }
+    
+    if (recursion_depth <= next_recursion_depth) {
         unsigned int glyph_count;
         hb_glyph_info_t *glyph_info = hb_buffer_get_glyph_infos(buffer, &glyph_count);
-        unsigned int index = indices[recursion_depth+1];
-        for (unsigned int i = index; i < index + window && i < glyph_count; i++) {
+        unsigned int index = indices[recursion_depth-1];
+	for (unsigned int i = index; i < index + window && i < glyph_count; i++) {
             if (i == current_index) std::cout << "*";
             printf("%u ", glyph_info[i].codepoint);
         }
-        std::cout << "\n";
-    }
-    
-    if (entering && lookup == debugged_lookup_id) {
-        debugging = true;
-        next_recursion_depth = recursion_depth;
-    }
-
-    if (debugging && recursion_depth == next_recursion_depth) {
-        std::cout << message << " ";
+        std::cout << "\n" << message << " ";
 
         std::string text;
         std::getline(std::cin, text);
         switch (text[0]) {
             case 'c':
-                debugging = false;
+                next_recursion_depth = -1;
                 break;
             case 'o':
                 next_recursion_depth--;
@@ -58,13 +54,13 @@ static hb_bool_t trace(
                 break;
         }
     }
-
-    if (debugging && entering && lookup != debugged_lookup_id) {
+    
+    if (entering) {
         recursion_depth++;
-    } else if (debugging && exiting) {
+    } else if (exiting) {
         recursion_depth--;
-        next_recursion_depth = min(recursion_depth, next_recursion_depth);
     }
+
     return true;
 }
 

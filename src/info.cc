@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
     debugged_lookup_id = atoi(argv[1]);
     window = atoi(argv[2]);
 
-    hb_blob_t *blob = hb_blob_create_from_file("C:/Users/11dli/Carmack/carmack/Carmack.otf");
+    hb_blob_t *blob = hb_blob_create_from_file("C:/Users/11dli/Carmack/carmack/target/Carmack.otf");
     hb_face_t *face = hb_face_create(blob, 0);
     hb_font_t *font = hb_font_create(face);
 

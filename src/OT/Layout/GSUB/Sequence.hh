@@ -42,10 +42,9 @@ struct Sequence
     {
       if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
       {
-	c->buffer->sync_so_far ();
 	c->buffer->message (c->font,
 			    "replacing glyph at %u (multiple substitution)",
-			    c->buffer->idx);
+			    c->buffer->out_len);
       }
 
       c->replace_glyph (substitute.arrayZ[0]);
@@ -65,20 +64,18 @@ struct Sequence
     {
       if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
       {
-	c->buffer->sync_so_far ();
 	c->buffer->message (c->font,
 			    "deleting glyph at %u (multiple substitution)",
-			    c->buffer->idx);
+			    c->buffer->out_len);
       }
 
       c->buffer->delete_glyph ();
 
       if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
       {
-	c->buffer->sync_so_far ();
 	c->buffer->message (c->font,
 			    "deleted glyph at %u (multiple substitution)",
-			    c->buffer->idx);
+			    c->buffer->out_len);
       }
 
       return_trace (true);
@@ -86,10 +83,9 @@ struct Sequence
 
     if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
     {
-      c->buffer->sync_so_far ();
       c->buffer->message (c->font,
 			  "multiplying glyph at %u",
-			  c->buffer->idx);
+			  c->buffer->out_len);
     }
 
     unsigned int klass = _hb_glyph_info_is_ligature (&c->buffer->cur()) ?
@@ -108,22 +104,8 @@ struct Sequence
 
     if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
     {
-      c->buffer->sync_so_far ();
-
-      char buf[HB_MAX_CONTEXT_LENGTH * 16] = {0};
-      char *p = buf;
-
-      for (unsigned i = c->buffer->idx - count; i < c->buffer->idx; i++)
-      {
-	if (buf < p && sizeof(buf) - 1u > unsigned (p - buf))
-	  *p++ = ',';
-	snprintf (p, sizeof(buf) - (p - buf), "%u", i);
-	p += strlen(p);
-      }
-
       c->buffer->message (c->font,
-			  "multiplied glyphs at %s",
-			  buf);
+			  "multiplied glyphs");
     }
 
     return_trace (true);

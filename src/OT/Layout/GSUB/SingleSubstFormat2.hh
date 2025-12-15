@@ -121,10 +121,9 @@ struct SingleSubstFormat2_4
 
     if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
     {
-      c->buffer->sync_so_far ();
       c->buffer->message (c->font,
 			  "replacing glyph at %u (single substitution)",
-			  c->buffer->idx);
+			  c->buffer->out_len);
     }
 
     c->replace_glyph (substitute[index]);

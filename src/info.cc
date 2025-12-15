@@ -30,11 +30,11 @@ static hb_bool_t trace(
     
     if (recursion_depth <= next_recursion_depth) {
         unsigned int glyph_count;
-        hb_glyph_info_t *glyph_info = hb_buffer_get_glyph_infos(buffer, &glyph_count);
+        hb_buffer_get_glyph_infos(buffer, &glyph_count);
         unsigned int index = indices[recursion_depth-1];
 	for (unsigned int i = index; i < index + window && i < glyph_count; i++) {
             if (i == current_index) std::cout << "*";
-            printf("%u ", glyph_info[i].codepoint);
+            printf("%u ", hb_buffer_get_index(buffer, i).codepoint);
         }
         std::cout << "\n" << message << " ";
 
@@ -90,4 +90,5 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 // ninja -Cbuild
-// build/src/info.exe {lookup} {window}
+// build/src/info.exe {lookup} {window}  
+					      

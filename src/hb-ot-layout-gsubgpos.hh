@@ -1783,20 +1783,16 @@ static inline void apply_lookup (hb_ot_apply_context_t *c,
 
     if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
     {
-      if (buffer->have_output)
-        c->buffer->sync_so_far ();
       c->buffer->message (c->font,
 			  "recursing to lookup %u at %u",
 			  (unsigned) lookupRecord[i].lookupListIndex,
-			  buffer->idx);
+			  buffer->have_output ? buffer->out_len : buffer->idx);
     }
 
     bool recursed_successfully = c->recurse (lookupRecord[i].lookupListIndex);
 
     if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
     {
-      if (buffer->have_output)
-        c->buffer->sync_so_far ();
       c->buffer->message (c->font,
 			  "recursed to lookup %u",
 			  (unsigned) lookupRecord[i].lookupListIndex);

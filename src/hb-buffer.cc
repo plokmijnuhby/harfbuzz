@@ -1646,6 +1646,14 @@ hb_buffer_get_glyph_infos (hb_buffer_t  *buffer,
   return (hb_glyph_info_t *) buffer->info;
 }
 
+hb_glyph_info_t hb_buffer_get_index(hb_buffer_t *buffer, unsigned int i) {
+    if (i < buffer->out_len) {
+        return buffer->out_info[i];
+    } else {
+        return buffer->info[i - buffer->out_len + buffer->idx];
+    }
+}
+
 /**
  * hb_buffer_get_glyph_positions:
  * @buffer: An #hb_buffer_t
@@ -2330,8 +2338,6 @@ hb_buffer_set_message_func (hb_buffer_t *buffer,
 bool
 hb_buffer_t::message_impl (hb_font_t *font, const char *fmt, va_list ap)
 {
-  assert (!have_output || (out_info == info && out_len == idx));
-
   message_depth++;
 
   char buf[100];

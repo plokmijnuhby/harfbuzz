@@ -32,7 +32,7 @@ static hb_bool_t trace(
         unsigned int glyph_count;
         hb_buffer_get_glyph_infos(buffer, &glyph_count);
         unsigned int index = indices[recursion_depth-1];
-	for (unsigned int i = index; i < index + window && i < glyph_count; i++) {
+        for (unsigned int i = index; i < index + window && i < glyph_count; i++) {
             if (i == current_index) std::cout << "*";
             printf("%u ", hb_buffer_get_index(buffer, i).codepoint);
         }

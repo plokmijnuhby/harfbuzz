@@ -5,7 +5,7 @@
 #include <iostream>
 #include <hb.hh>
 
-#define CHARS 2000
+#define CHARS 10000
 
 unsigned int debugged_lookup_id, window = 0;
 int recursion_depth = 0;

@@ -462,9 +462,6 @@ _hb_ot_shape_fallback_mark_position (const hb_ot_shape_plan_t *plan,
   return;
 #endif
 
-  if (!buffer->message (font, "start fallback mark"))
-    return;
-
   _hb_buffer_assert_gsubgpos_vars (buffer);
 
   unsigned int start = 0;
@@ -478,8 +475,6 @@ _hb_ot_shape_fallback_mark_position (const hb_ot_shape_plan_t *plan,
       start = i;
     }
   position_cluster (plan, font, buffer, start, count, adjust_offsets_when_zeroing);
-
-  (void) buffer->message (font, "end fallback mark");
 }
 
 
@@ -520,9 +515,6 @@ _hb_ot_shape_fallback_kern (const hb_ot_shape_plan_t *plan,
       !font->has_glyph_v_kerning_func ())
     return;
 
-  if (!buffer->message (font, "start fallback kern"))
-    return;
-
   bool reverse = HB_DIRECTION_IS_BACKWARD (buffer->props.direction);
 
   if (reverse)
@@ -534,8 +526,6 @@ _hb_ot_shape_fallback_kern (const hb_ot_shape_plan_t *plan,
 
   if (reverse)
     buffer->reverse ();
-
-  (void) buffer->message (font, "end fallback kern");
 #endif
 }
 

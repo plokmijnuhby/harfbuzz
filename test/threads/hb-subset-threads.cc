@@ -120,11 +120,11 @@ static void test_operation (operation_t operation,
 {
   char name[1024] = "subset";
   const char *p;
-  strcat (name, "/");
+  strcat_s (name, 1024, "/");
   p = strrchr (test_input.font_path, '/');
-  strcat (name, p ? p + 1 : test_input.font_path);
-  strcat (name, "/");
-  strcat (name, operation_name);
+  strcat_s (name, 1024, p ? p + 1 : test_input.font_path);
+  strcat_s (name, 1024, "/");
+  strcat_s (name, 1024, operation_name);
 
   printf ("Testing %s\n", name);
 

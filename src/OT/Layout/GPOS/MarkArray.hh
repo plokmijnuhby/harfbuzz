@@ -39,13 +39,6 @@ struct MarkArray : Array16Of<MarkRecord>        /* Array of MarkRecords--in Cove
     mark_anchor.get_anchor (c, buffer->cur().codepoint, &mark_x, &mark_y);
     glyph_anchor.get_anchor (c, buffer->info[glyph_pos].codepoint, &base_x, &base_y);
 
-    if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
-    {
-      c->buffer->message (c->font,
-			  "attaching mark glyph at %u to glyph at %u",
-			  c->buffer->idx, glyph_pos);
-    }
-
     hb_glyph_position_t &o = buffer->cur_pos();
     o.attach_chain() = (int) glyph_pos - (int) buffer->idx;
     if (o.attach_chain() != (int) glyph_pos - (int) buffer->idx)
@@ -57,13 +50,6 @@ struct MarkArray : Array16Of<MarkRecord>        /* Array of MarkRecords--in Cove
     o.x_offset = roundf (base_x - mark_x);
     o.y_offset = roundf (base_y - mark_y);
     buffer->scratch_flags |= HB_BUFFER_SCRATCH_FLAG_HAS_GPOS_ATTACHMENT;
-
-    if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
-    {
-      c->buffer->message (c->font,
-			  "attached mark glyph at %u to glyph at %u",
-			  c->buffer->idx, glyph_pos);
-    }
 
   overflow:
     buffer->idx++;

@@ -135,12 +135,9 @@ hb_ot_layout_kern (const hb_ot_shape_plan_t *plan,
   hb_blob_t *blob = accel.get_blob ();
 
   AAT::hb_aat_apply_context_t c (plan, font, buffer, blob);
-
-  if (!buffer->message (font, "start table kern")) return;
   c.buffer_glyph_set = accel.scratch.create_buffer_glyph_set ();
   accel.apply (&c);
   accel.scratch.destroy_buffer_glyph_set (c.buffer_glyph_set);
-  (void) buffer->message (font, "end table kern");
 }
 #endif
 
@@ -2032,9 +2029,12 @@ inline void hb_ot_map_t::apply (const Proxy &proxy,
 
       auto *accel = proxy.accel.get_accel (lookup_index);
       if (unlikely (!accel)) continue;
-
-      if (buffer->messaging () &&
-	  !buffer->message (font, "start lookup %u feature '%c%c%c%c'", lookup_index, HB_UNTAG (lookup.feature_tag))) continue;
+        
+        bool was_debugging = buffer->debugging
+            || buffer->breakpoint == (int)lookup_index;
+        if (was_debugging
+            && !buffer->message_func(buffer, "entering", lookup_index, 0, 0)
+        ) buffer->debugging = false;
 
       /* Only try applying the lookup if there is any overlap. */
       if (accel->digest.may_intersect (buffer->digest))
@@ -2051,11 +2051,11 @@ inline void hb_ot_map_t::apply (const Proxy &proxy,
 			     proxy.accel.table->get_lookup (lookup_index),
 			     *accel);
       }
-      else if (buffer->messaging ())
-	(void) buffer->message (font, "skipped lookup %u feature '%c%c%c%c' because no glyph matches", lookup_index, HB_UNTAG (lookup.feature_tag));
-
-      if (buffer->messaging ())
-	(void) buffer->message (font, "end lookup %u feature '%c%c%c%c'", lookup_index, HB_UNTAG (lookup.feature_tag));
+      
+        if (was_debugging) {
+            buffer->debugging = true;
+            buffer->message_func (buffer, "exiting", lookup_index, 0, 0);
+        }
     }
 
     if (stage->pause_func)
@@ -2072,21 +2072,13 @@ inline void hb_ot_map_t::apply (const Proxy &proxy,
 void hb_ot_map_t::substitute (const hb_ot_shape_plan_t *plan, hb_font_t *font, hb_buffer_t *buffer) const
 {
   GSUBProxy proxy (font->face);
-  if (buffer->messaging () &&
-      !buffer->message (font, "start table GSUB script tag '%c%c%c%c'", HB_UNTAG (chosen_script[0]))) return;
   apply (proxy, plan, font, buffer);
-  if (buffer->messaging ())
-    (void) buffer->message (font, "end table GSUB script tag '%c%c%c%c'", HB_UNTAG (chosen_script[0]));
 }
 
 void hb_ot_map_t::position (const hb_ot_shape_plan_t *plan, hb_font_t *font, hb_buffer_t *buffer) const
 {
   GPOSProxy proxy (font->face);
-  if (buffer->messaging () &&
-      !buffer->message (font, "start table GPOS script tag '%c%c%c%c'", HB_UNTAG (chosen_script[1]))) return;
   apply (proxy, plan, font, buffer);
-  if (buffer->messaging ())
-    (void) buffer->message (font, "end table GPOS script tag '%c%c%c%c'", HB_UNTAG (chosen_script[1]));
 }
 
 void

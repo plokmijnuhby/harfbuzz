@@ -57,21 +57,12 @@ struct AlternateSet
 
     if (unlikely (alt_index > count || alt_index == 0)) return_trace (false);
 
-    if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
+    if (HB_BUFFER_MESSAGE_MORE && c->buffer->debugging)
     {
-      c->buffer->message (c->font,
-			  "replacing glyph at %u (alternate substitution)",
-			  c->buffer->out_len);
+      c->buffer->message_func (c->buffer, "alternate", c->lookup_index, c->buffer->out_len, c->buffer->out_len);
     }
 
     c->replace_glyph (alternates[alt_index - 1]);
-
-    if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
-    {
-      c->buffer->message (c->font,
-			  "replaced glyph at %u (alternate substitution)",
-			  c->buffer->idx - 1u);
-    }
 
     return_trace (true);
   }

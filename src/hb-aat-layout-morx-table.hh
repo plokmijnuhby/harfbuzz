@@ -1180,7 +1180,6 @@ struct Chain
 
       if (!c->buffer_intersects_machine ())
       {
-	(void) c->buffer->message (c->font, "skipped chainsubtable %u because no glyph matches", c->lookup_index);
 	goto skip;
       }
 
@@ -1216,15 +1215,10 @@ struct Chain
 		bool (coverage & ChainSubtable<Types>::Backwards) !=
 		HB_DIRECTION_IS_BACKWARD (c->buffer->props.direction);
 
-      if (!c->buffer->message (c->font, "start chainsubtable %u", c->lookup_index))
-	goto skip;
-
       if (reverse != c->buffer_is_reversed)
         c->reverse_buffer ();
 
       subtable->apply (c);
-
-      (void) c->buffer->message (c->font, "end chainsubtable %u", c->lookup_index);
 
       if (unlikely (!c->buffer->successful)) break;
 

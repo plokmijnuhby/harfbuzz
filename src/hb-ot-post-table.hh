@@ -168,7 +168,7 @@ struct post
       if (!s.length) return false;
       if (!buf_len) return true;
       unsigned int len = hb_min (buf_len - 1, s.length);
-      strncpy (buf, s.arrayZ, len);
+      strncpy_s (buf, len, s.arrayZ, len);
       buf[len] = '\0';
       return true;
     }

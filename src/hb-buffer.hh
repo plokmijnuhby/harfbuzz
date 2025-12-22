@@ -131,7 +131,8 @@ struct hb_buffer_t
 
 #ifndef HB_NO_BUFFER_MESSAGE
   hb_buffer_message_func_t message_func;
-  void *message_data;
+  bool debugging;
+  int breakpoint;
   hb_destroy_func_t message_destroy;
   unsigned message_depth; /* How deeply are we inside a message callback? */
 #else
@@ -588,23 +589,6 @@ struct hb_buffer_t
     return unlikely (message_func);
 #endif
   }
-  bool message (hb_font_t *font, const char *fmt, ...) HB_PRINTF_FUNC(3, 4)
-  {
-#ifdef HB_NO_BUFFER_MESSAGE
-    return true;
-#else
-    if (likely (!messaging ()))
-      return true;
-
-    va_list ap;
-    va_start (ap, fmt);
-    bool ret = message_impl (font, fmt, ap);
-    va_end (ap);
-
-    return ret;
-#endif
-  }
-  HB_INTERNAL bool message_impl (hb_font_t *font, const char *fmt, va_list ap) HB_PRINTF_FUNC(3, 0);
 
   static void
   set_cluster (hb_glyph_info_t &inf, unsigned int cluster, unsigned int mask = 0)

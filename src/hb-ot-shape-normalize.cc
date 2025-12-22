@@ -369,7 +369,7 @@ _hb_ot_shape_normalize (const hb_ot_shape_plan_t *plan,
 
   /* Second round, reorder (inplace) */
 
-  if (!all_simple && buffer->message(font, "start reorder"))
+  if (!all_simple)
   {
     count = buffer->len;
     hb_glyph_info_t *info = buffer->info;
@@ -396,7 +396,6 @@ _hb_ot_shape_normalize (const hb_ot_shape_plan_t *plan,
 
       i = end;
     }
-    (void) buffer->message(font, "end reorder");
   }
   if (buffer->scratch_flags & HB_BUFFER_SCRATCH_FLAG_HAS_CGJ)
   {

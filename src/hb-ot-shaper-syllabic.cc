@@ -41,14 +41,8 @@ hb_syllabic_insert_dotted_circles (hb_font_t *font,
     return false;
   if (likely (!(buffer->scratch_flags & HB_BUFFER_SCRATCH_FLAG_HAS_BROKEN_SYLLABLE)))
   {
-    if (buffer->messaging ())
-      (void) buffer->message (font, "skipped inserting dotted-circles because there is no broken syllables");
     return false;
   }
-
-  if (buffer->messaging () &&
-      !buffer->message (font, "start inserting dotted-circles"))
-    return false;
 
   hb_codepoint_t dottedcircle_glyph;
   if (!font->get_nominal_glyph (0x25CCu, &dottedcircle_glyph))
@@ -92,9 +86,6 @@ hb_syllabic_insert_dotted_circles (hb_font_t *font,
       (void) buffer->next_glyph ();
   }
   buffer->sync ();
-
-  if (buffer->messaging ())
-    (void) buffer->message (font, "end inserting dotted-circles");
 
   return true;
 }

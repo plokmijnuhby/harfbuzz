@@ -1400,7 +1400,7 @@ struct cff1
       }
       if (!str_len) return false;
       unsigned int len = hb_min (buf_len - 1, str_len);
-      strncpy (buf, (const char*)str, len);
+      strncpy_s (buf, len, (const char*)str, len);
       buf[len] = '\0';
       return true;
     }

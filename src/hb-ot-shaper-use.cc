@@ -449,9 +449,7 @@ reorder_use (const hb_ot_shape_plan_t *plan,
 	     hb_font_t *font,
 	     hb_buffer_t *buffer)
 {
-  bool ret = false;
-  if (buffer->message (font, "start reordering USE"))
-  {
+    bool ret = false;
     if (hb_syllabic_insert_dotted_circles (font, buffer,
 					   use_broken_cluster,
 					   USE(B),
@@ -461,12 +459,9 @@ reorder_use (const hb_ot_shape_plan_t *plan,
     foreach_syllable (buffer, start, end)
       reorder_syllable_use (buffer, start, end);
 
-    (void) buffer->message (font, "end reordering USE");
-  }
+    HB_BUFFER_DEALLOCATE_VAR (buffer, use_category);
 
-  HB_BUFFER_DEALLOCATE_VAR (buffer, use_category);
-
-  return ret;
+    return ret;
 }
 
 

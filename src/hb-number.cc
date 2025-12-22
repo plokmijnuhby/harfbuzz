@@ -34,7 +34,7 @@ _parse_number (const char **pp, const char *end, T *pv,
 {
   char buf[32];
   unsigned len = hb_min (ARRAY_LENGTH (buf) - 1, (unsigned) (end - *pp));
-  strncpy (buf, *pp, len);
+  strncpy_s (buf, len, *pp, len);
   buf[len] = '\0';
 
   char *p = buf;

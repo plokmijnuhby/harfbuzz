@@ -49,9 +49,6 @@ struct hb_kern_machine_t
 	     hb_mask_t    kern_mask,
 	     bool         scale = true) const
   {
-    if (!buffer->message (font, "start kern"))
-      return;
-
     buffer->unsafe_to_concat ();
     OT::hb_ot_apply_context_t c (1, font, buffer, hb_blob_get_empty ());
     c.set_lookup_mask (kern_mask);
@@ -130,8 +127,6 @@ struct hb_kern_machine_t
     skip:
       idx = skippy_iter.idx;
     }
-
-    (void) buffer->message (font, "end kern");
   }
 
   const Driver &driver;

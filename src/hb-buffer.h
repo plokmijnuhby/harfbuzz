@@ -858,16 +858,18 @@ hb_buffer_diff (hb_buffer_t *buffer,
  *
  * Since: 1.1.3
  */
-typedef hb_bool_t	(*hb_buffer_message_func_t)	(hb_buffer_t *buffer,
-							 hb_font_t   *font,
-							 const char  *message,
-							 void        *user_data);
+typedef hb_bool_t (*hb_buffer_message_func_t) (hb_buffer_t *buffer,
+    const char* type,
+    const unsigned int lookup_index,
+    const unsigned int parent_index,
+    const unsigned int index
+);
 
-HB_EXTERN void
-hb_buffer_set_message_func (hb_buffer_t *buffer,
-			    hb_buffer_message_func_t func,
-			    void *user_data, hb_destroy_func_t destroy);
-
+HB_EXTERN void hb_buffer_set_message_func (
+    hb_buffer_t *buffer,
+    hb_buffer_message_func_t func,
+    int breakpoint
+);
 
 HB_END_DECLS
 

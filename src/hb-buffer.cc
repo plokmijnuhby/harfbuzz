@@ -880,11 +880,6 @@ hb_buffer_destroy (hb_buffer_t *buffer)
 
   hb_free (buffer->info);
   hb_free (buffer->pos);
-#ifndef HB_NO_BUFFER_MESSAGE
-  if (buffer->message_destroy)
-    buffer->message_destroy (buffer->message_data);
-#endif
-
   hb_free (buffer);
 }
 
@@ -2311,41 +2306,15 @@ hb_buffer_diff (hb_buffer_t *buffer,
  * Since: 1.1.3
  **/
 void
-hb_buffer_set_message_func (hb_buffer_t *buffer,
-			    hb_buffer_message_func_t func,
-			    void *user_data, hb_destroy_func_t destroy)
+hb_buffer_set_message_func (hb_buffer_t *buffer, hb_buffer_message_func_t func,
+    int breakpoint)
 {
-  if (unlikely (hb_object_is_immutable (buffer)))
-  {
-    if (destroy)
-      destroy (user_data);
-    return;
-  }
-
-  if (buffer->message_destroy)
-    buffer->message_destroy (buffer->message_data);
-
   if (func) {
     buffer->message_func = func;
-    buffer->message_data = user_data;
-    buffer->message_destroy = destroy;
+    buffer->breakpoint = breakpoint;
   } else {
     buffer->message_func = nullptr;
-    buffer->message_data = nullptr;
-    buffer->message_destroy = nullptr;
+    buffer->breakpoint = -1;
   }
-}
-bool
-hb_buffer_t::message_impl (hb_font_t *font, const char *fmt, va_list ap)
-{
-  message_depth++;
-
-  char buf[100];
-  vsnprintf (buf, sizeof (buf), fmt, ap);
-  bool ret = (bool) this->message_func (this, font, buf, this->message_data);
-
-  message_depth--;
-
-  return ret;
 }
 #endif

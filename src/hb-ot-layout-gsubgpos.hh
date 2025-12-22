@@ -1781,23 +1781,23 @@ static inline void apply_lookup (hb_ot_apply_context_t *c,
     if (unlikely (buffer->max_ops <= 0))
       break;
 
-    if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
-    {
-      c->buffer->message (c->font,
-			  "recursing to lookup %u at %u",
-			  (unsigned) lookupRecord[i].lookupListIndex,
-			  buffer->have_output ? buffer->out_len : buffer->idx);
+    if (buffer->breakpoint == (int)lookupRecord[i].lookupListIndex) {
+        buffer->debugging = true;
     }
+    bool was_debugging = buffer->debugging;
+    if (was_debugging && !buffer->message_func(
+            buffer, "entering", lookupRecord[i].lookupListIndex,
+            c->match_positions.arrayZ[0], c->match_positions.arrayZ[i]
+        )
+    ) buffer->debugging = false;
 
     bool recursed_successfully = c->recurse (lookupRecord[i].lookupListIndex);
-
-    if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
-    {
-      c->buffer->message (c->font,
-			  "recursed to lookup %u",
-			  (unsigned) lookupRecord[i].lookupListIndex);
+    if (was_debugging) {
+        buffer->debugging = true;
+        buffer->message_func (buffer, "exiting", lookupRecord[i].lookupListIndex,
+            c->match_positions.arrayZ[0], c->match_positions.arrayZ[i]
+        );
     }
-
     if (!recursed_successfully)
       continue;
 

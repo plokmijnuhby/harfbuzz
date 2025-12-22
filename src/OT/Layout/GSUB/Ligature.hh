@@ -80,21 +80,13 @@ struct Ligature
     if (unlikely (count == 1))
     {
 
-      if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
+      if (HB_BUFFER_MESSAGE_MORE && c->buffer->debugging)
       {
-	c->buffer->message (c->font,
-			    "replacing glyph at %u (ligature substitution)",
-			    c->buffer->out_len);
+	c->buffer->message_func (c->buffer, "ligature", c->lookup_index,
+				 c->buffer->out_len, c->buffer->out_len);
       }
 
       c->replace_glyph (ligGlyph);
-
-      if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
-      {
-	c->buffer->message (c->font,
-			    "replaced glyph at %u (ligature substitution)",
-			    c->buffer->idx - 1u);
-      }
 
       return_trace (true);
     }
@@ -115,13 +107,10 @@ struct Ligature
       return_trace (false);
     }
 
-    unsigned pos = 0;
-    if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
+    if (HB_BUFFER_MESSAGE_MORE && c->buffer->debugging)
     {
-      pos = c->buffer->out_len;
-
-      c->buffer->message (c->font,
-			  "ligating glyphs");
+            c->buffer->message_func (c->buffer, "ligature", c->lookup_index,
+                                                                c->buffer->out_len, c->buffer->out_len);
     }
 
     ligate_input (c,
@@ -129,13 +118,6 @@ struct Ligature
                   match_end,
                   ligGlyph,
                   total_component_count);
-
-    if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
-    {
-      c->buffer->message (c->font,
-			  "ligated glyph at %u",
-			  pos);
-    }
 
     return_trace (true);
   }

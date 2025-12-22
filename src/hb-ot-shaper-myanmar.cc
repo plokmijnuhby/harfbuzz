@@ -325,8 +325,6 @@ reorder_myanmar (const hb_ot_shape_plan_t *plan,
 		 hb_buffer_t *buffer)
 {
   bool ret = false;
-  if (buffer->message (font, "start reordering myanmar"))
-  {
     if (hb_syllabic_insert_dotted_circles (font, buffer,
 					   myanmar_broken_cluster,
 					   M_Cat(DOTTEDCIRCLE)))
@@ -334,8 +332,6 @@ reorder_myanmar (const hb_ot_shape_plan_t *plan,
 
     foreach_syllable (buffer, start, end)
       reorder_syllable_myanmar (plan, font->face, buffer, start, end);
-    (void) buffer->message (font, "end reordering myanmar");
-  }
 
   HB_BUFFER_DEALLOCATE_VAR (buffer, myanmar_category);
   HB_BUFFER_DEALLOCATE_VAR (buffer, myanmar_position);

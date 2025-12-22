@@ -152,13 +152,6 @@ struct CursivePosFormat1
     unsigned int i = skippy_iter.idx;
     unsigned int j = buffer->idx;
 
-    if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
-    {
-      c->buffer->message (c->font,
-			  "cursive attaching glyph at %u to glyph at %u",
-			  i, j);
-    }
-
     buffer->unsafe_to_break (i, j + 1);
     float entry_x, entry_y, exit_x, exit_y;
     (this+prev_record.exitAnchor).get_anchor (c, buffer->info[i].codepoint, &exit_x, &exit_y);
@@ -253,13 +246,6 @@ struct CursivePosFormat1
 	pos[parent].y_offset = 0;
       else
 	pos[parent].x_offset = 0;
-    }
-
-    if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
-    {
-      c->buffer->message (c->font,
-			  "cursive attached glyph at %u to glyph at %u",
-			  i, j);
     }
 
   overflow:

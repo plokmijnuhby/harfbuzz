@@ -119,21 +119,12 @@ struct SingleSubstFormat2_4
 
     if (unlikely (index >= substitute.len)) return_trace (false);
 
-    if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
+    if (HB_BUFFER_MESSAGE_MORE && c->buffer->debugging)
     {
-      c->buffer->message (c->font,
-			  "replacing glyph at %u (single substitution)",
-			  c->buffer->out_len);
+      c->buffer->message_func (c->buffer, "single2", c->lookup_index, c->buffer->out_len, c->buffer->out_len);
     }
 
     c->replace_glyph (substitute[index]);
-
-    if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
-    {
-      c->buffer->message (c->font,
-			  "replaced glyph at %u (single substitution)",
-			  c->buffer->idx - 1u);
-    }
 
     return_trace (true);
   }

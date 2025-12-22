@@ -1025,15 +1025,11 @@ struct KerxTable
 
       if (!c->buffer_intersects_machine ())
       {
-	(void) c->buffer->message (c->font, "skipped subtable %u because no glyph matches", c->lookup_index);
 	goto skip;
       }
 
       reverse = bool (st->u.header.coverage & st->u.header.Backwards) !=
 		HB_DIRECTION_IS_BACKWARD (c->buffer->props.direction);
-
-      if (!c->buffer->message (c->font, "start subtable %u", c->lookup_index))
-	goto skip;
 
       if (!seenCrossStream &&
 	  (st->u.header.coverage & st->u.header.CrossStream))
@@ -1060,8 +1056,6 @@ struct KerxTable
 	hb_sanitize_with_object_t with (&c->sanitizer, i < count - 1 ? st : (const SubTable *) nullptr);
 	ret |= st->dispatch (c);
       }
-
-      (void) c->buffer->message (c->font, "end subtable %u", c->lookup_index);
 
     skip:
       st = &StructAfter<SubTable> (*st);

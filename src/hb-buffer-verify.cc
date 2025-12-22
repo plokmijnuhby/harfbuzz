@@ -46,16 +46,9 @@ buffer_verify_error (hb_buffer_t *buffer,
 {
   va_list ap;
   va_start (ap, fmt);
-  if (buffer->messaging ())
-  {
-    buffer->message_impl (font, fmt, ap);
-  }
-  else
-  {
-    fprintf (stderr, "harfbuzz ");
-    vfprintf (stderr, fmt, ap);
-    fprintf (stderr, "\n");
-  }
+  fprintf (stderr, "harfbuzz ");
+  vfprintf (stderr, fmt, ap);
+  fprintf (stderr, "\n");
   va_end (ap);
 }
 

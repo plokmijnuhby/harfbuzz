@@ -40,21 +40,13 @@ struct Sequence
      * as a "multiplied" substitution. */
     if (unlikely (count == 1))
     {
-      if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
+      if (HB_BUFFER_MESSAGE_MORE && c->buffer->debugging)
       {
-	c->buffer->message (c->font,
-			    "replacing glyph at %u (multiple substitution)",
-			    c->buffer->out_len);
+	c->buffer->message_func (c->buffer, "multiple", c->lookup_index,
+				 c->buffer->out_len, c->buffer->out_len);
       }
 
       c->replace_glyph (substitute.arrayZ[0]);
-
-      if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
-      {
-	c->buffer->message (c->font,
-			    "replaced glyph at %u (multiple substitution)",
-			    c->buffer->idx - 1u);
-      }
 
       return_trace (true);
     }
@@ -62,30 +54,20 @@ struct Sequence
      * https://github.com/harfbuzz/harfbuzz/issues/253 */
     else if (unlikely (count == 0))
     {
-      if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
+      if (HB_BUFFER_MESSAGE_MORE && c->buffer->debugging)
       {
-	c->buffer->message (c->font,
-			    "deleting glyph at %u (multiple substitution)",
-			    c->buffer->out_len);
+	c->buffer->message_func (c->buffer, "multiple", c->lookup_index,
+				 c->buffer->out_len, c->buffer->out_len);
       }
 
       c->buffer->delete_glyph ();
 
-      if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
-      {
-	c->buffer->message (c->font,
-			    "deleted glyph at %u (multiple substitution)",
-			    c->buffer->out_len);
-      }
-
       return_trace (true);
     }
-
-    if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
+    if (HB_BUFFER_MESSAGE_MORE && c->buffer->debugging)
     {
-      c->buffer->message (c->font,
-			  "multiplying glyph at %u",
-			  c->buffer->out_len);
+            c->buffer->message_func (c->buffer, "multiple", c->lookup_index,
+                                                                c->buffer->out_len, c->buffer->out_len);
     }
 
     unsigned int klass = _hb_glyph_info_is_ligature (&c->buffer->cur()) ?
@@ -101,12 +83,6 @@ struct Sequence
       c->output_glyph_for_component (substitute.arrayZ[i], klass);
     }
     c->buffer->skip_glyph ();
-
-    if (HB_BUFFER_MESSAGE_MORE && c->buffer->messaging ())
-    {
-      c->buffer->message (c->font,
-			  "multiplied glyphs");
-    }
 
     return_trace (true);
   }

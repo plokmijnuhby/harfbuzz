@@ -2054,7 +2054,6 @@ inline void hb_ot_map_t::apply (const Proxy &proxy,
       
         if (was_debugging) {
             buffer->debugging = true;
-            buffer->message_func (buffer, "exiting", lookup_index, 0, 0);
         }
     }
 

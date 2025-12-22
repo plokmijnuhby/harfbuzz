@@ -1787,16 +1787,13 @@ static inline void apply_lookup (hb_ot_apply_context_t *c,
     bool was_debugging = buffer->debugging;
     if (was_debugging && !buffer->message_func(
             buffer, "entering", lookupRecord[i].lookupListIndex,
-            c->match_positions.arrayZ[0], c->match_positions.arrayZ[i]
+            c->match_positions.arrayZ[0], buffer->out_len
         )
     ) buffer->debugging = false;
 
     bool recursed_successfully = c->recurse (lookupRecord[i].lookupListIndex);
     if (was_debugging) {
         buffer->debugging = true;
-        buffer->message_func (buffer, "exiting", lookupRecord[i].lookupListIndex,
-            c->match_positions.arrayZ[0], c->match_positions.arrayZ[i]
-        );
     }
     if (!recursed_successfully)
       continue;

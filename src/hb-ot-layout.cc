@@ -2032,9 +2032,11 @@ inline void hb_ot_map_t::apply (const Proxy &proxy,
         
         bool was_debugging = buffer->debugging
             || buffer->breakpoint == (int)lookup_index;
-        if (was_debugging
-            && !buffer->message_func(buffer, "entering", lookup_index, 0, 0)
-        ) buffer->debugging = false;
+        if (was_debugging) {
+            buffer->debugging = buffer->message_func(
+                buffer, "entering", lookup_index, 0, 0
+            );
+        }
 
       /* Only try applying the lookup if there is any overlap. */
       if (accel->digest.may_intersect (buffer->digest))

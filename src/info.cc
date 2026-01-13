@@ -64,4 +64,3 @@ int main(int argc, char *argv[]) {
 }
 // ninja -Cbuild
 // build/src/info.exe {lookup} {window}  
-					      

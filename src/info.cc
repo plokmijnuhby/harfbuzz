@@ -62,5 +62,6 @@ int main(int argc, char *argv[]) {
     hb_blob_destroy(blob);
     return 0;
 }
-// ninja -Cbuild
-// build/src/info.exe {lookup} {window}  
+// Useful commands:
+// ninja -C builddir
+// builddir/src/info.exe {lookup} {window}

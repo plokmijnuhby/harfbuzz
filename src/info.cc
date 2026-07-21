@@ -32,13 +32,13 @@ static void trace(hb_buffer_t *buffer,
       last_command = text;
     }
 
-    unsigned window;
-    if (sscanf(text.c_str(), "p %u", &window))
+    unsigned window_start, window_end;
+    if (sscanf(text.c_str(), "p %u %u", &window_start, &window_end))
     {
       unsigned int glyph_count;
       hb_buffer_get_glyph_infos (buffer, &glyph_count);
-      for (unsigned int i = parent_index;
-	   i < parent_index + window && i < glyph_count; i++)
+      for (unsigned int i = window_start;
+	   i < parent_index + window_end && i < glyph_count; i++)
       {
 	if (i == index) std::cout << "*";
 	printf ("%u ", hb_buffer_get_index (buffer, i).codepoint);

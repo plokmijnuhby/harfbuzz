@@ -2029,9 +2029,12 @@ inline void hb_ot_map_t::apply (const Proxy &proxy,
 
       auto *accel = proxy.accel.get_accel (lookup_index);
       if (unlikely (!accel)) continue;
-        
-        bool was_debugging = buffer->debugging
-            || buffer->breakpoint == (int)lookup_index;
+      if (buffer->breakpoint == (int) lookup_index)
+      {
+	buffer->debugging = true;
+	buffer->continuing = false;
+      }
+      bool was_debugging = buffer->debugging;
         if (was_debugging) {
             buffer->message_func(
                 buffer, "entering", lookup_index, 0, 0
@@ -2055,7 +2058,7 @@ inline void hb_ot_map_t::apply (const Proxy &proxy,
       }
       
         if (was_debugging) {
-            buffer->debugging = true;
+            buffer->debugging = !buffer->continuing;
         }
     }
 

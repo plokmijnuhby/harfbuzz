@@ -37,8 +37,7 @@ static void trace(hb_buffer_t *buffer,
     {
       unsigned int glyph_count;
       hb_buffer_get_glyph_infos (buffer, &glyph_count);
-      for (unsigned int i = window_start;
-	   i < parent_index + window_end && i < glyph_count; i++)
+      for (unsigned int i = window_start; i < window_end && i < glyph_count; i++)
       {
 	if (i == index) std::cout << "*";
 	printf ("%u ", hb_buffer_get_index (buffer, i).codepoint);

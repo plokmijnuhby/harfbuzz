@@ -8,35 +8,52 @@
 
 #define CHARS 10000
 
-unsigned int window = 0;
 std::string lookup_names[8192];
+std::string last_command = "s";
 
 static hb_bool_t trace(hb_buffer_t *buffer,
     const char* type,
     const unsigned int lookup_index,
     const unsigned int parent_index,
     const unsigned int index
-) {
-    unsigned int glyph_count;
-    hb_buffer_get_glyph_infos(buffer, &glyph_count);
-    for (unsigned int i = parent_index; i < parent_index + window && i < glyph_count;
-        i++)
-    {
-        if (i == index) std::cout << "*";
-        printf("%u ", hb_buffer_get_index(buffer, i).codepoint);
-    }
-    std::string name = lookup_names[lookup_index];
-    if (name == "") name = std::to_string (lookup_index);
-    std::cout << "\n" << type << " " << name << " ";
-
+)
+{
+  std::string name = lookup_names[lookup_index];
+  if (name == "") name = std::to_string (lookup_index);
+  while (true)
+  {
+    std::cout << type << " " << name << " ";
     std::string text;
-    std::getline(std::cin, text);
-    return text[0] == 's';
+    std::getline (std::cin, text);
+    if (text.empty ()) { text = last_command; }
+    else
+    {
+      last_command = text;
+    }
+
+    unsigned window;
+    if (sscanf(text.c_str(), "p %u", &window))
+    {
+      unsigned int glyph_count;
+      hb_buffer_get_glyph_infos (buffer, &glyph_count);
+      for (unsigned int i = parent_index;
+	   i < parent_index + window && i < glyph_count; i++)
+      {
+	if (i == index) std::cout << "*";
+	printf ("%u ", hb_buffer_get_index (buffer, i).codepoint);
+      }
+      printf ("\n");
+    }
+    else if (text[0] == 's') { return true; }
+    else if (text[0] == 'o') { return false; }
+    else
+    {
+      hb_buffer_set_message_func (buffer, trace, stoi (text));
+    }
+  }
 }
 
 int main(int argc, char *argv[]) {
-    window = atoi(argv[2]);
-
     std::ifstream lookup_names_file("C:/Users/11dli/Carmack/carmack/target/lookup_names.txt");
     int i = 0;
     while (std::getline (lookup_names_file, lookup_names[i])) i++;

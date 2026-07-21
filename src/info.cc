@@ -44,12 +44,12 @@ static void trace(hb_buffer_t *buffer,
       }
       printf ("\n");
     }
-    else if (text[0] == 's') { return; }
-    else if (text[0] == 'n') {
+    else if (text == "s") { return; }
+    else if (text == "n") {
       hb_buffer_set_debug (buffer, false, false);
       return;
     }
-    else if (text[0] == 'c') {
+    else if (text == "c") {
       hb_buffer_set_debug (buffer, false, true);
       return;
     }

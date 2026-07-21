@@ -23,7 +23,7 @@ static void trace(hb_buffer_t *buffer,
   if (name == "") name = std::to_string (lookup_index);
   while (true)
   {
-    std::cout << type << " " << name << " ";
+    printf ("%s %s at %u (%u relative to parent) ", type, name.c_str(), index, index-parent_index);
     std::string text;
     std::getline (std::cin, text);
     if (text.empty ()) { text = last_command; }

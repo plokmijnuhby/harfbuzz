@@ -9,6 +9,7 @@
 #define CHARS 10000
 
 std::string lookup_names[8192];
+int num_lookups = 0;
 std::string last_command = "s";
 
 static void trace(hb_buffer_t *buffer,
@@ -53,21 +54,30 @@ static void trace(hb_buffer_t *buffer,
       hb_buffer_set_debug (buffer, false, true);
       return;
     }
-    else
-    {
-      hb_buffer_set_message_func (buffer, trace, stoi (text));
+    else {
+      int lookup = 0;
+      for (int i = 0; i < num_lookups; i++) {
+        if (lookup_names[i] == text) {
+            lookup = i;
+	    break;
+	}
+      }
+      if (lookup == 0) { lookup = stoi (text); }
+      hb_buffer_set_debug (buffer, false, true);
+      hb_buffer_set_message_func (buffer, trace, lookup);
+      return;
     }
   }
 }
 
 int main(int argc, char *argv[]) {
     std::ifstream lookup_names_file("C:/Users/11dli/Carmack/carmack/target/lookup_names.txt");
-    int i = 0;
     int lookup = 0;
     std::string lookup_name = argv[1];
-    while (std::getline (lookup_names_file, lookup_names[i])) {
-      if (lookup_names[i] == lookup_name) { lookup = i; }
-      i++;
+    while (std::getline (lookup_names_file, lookup_names[num_lookups]))
+    {
+      if (lookup_names[num_lookups] == lookup_name) { lookup = num_lookups; }
+      num_lookups++;
     }
     if (lookup == 0) { lookup = stoi (lookup_name); }
 
@@ -95,3 +105,4 @@ int main(int argc, char *argv[]) {
 // Useful commands:
 // ninja -C builddir
 // builddir/src/info.exe {lookup} {window}
+	

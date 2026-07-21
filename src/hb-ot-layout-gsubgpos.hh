@@ -1783,6 +1783,7 @@ static inline void apply_lookup (hb_ot_apply_context_t *c,
 
     if (buffer->breakpoint == (int)lookupRecord[i].lookupListIndex) {
         buffer->debugging = true;
+        buffer->continuing = false;
     }
     bool was_debugging = buffer->debugging;
     if(was_debugging) buffer->message_func(

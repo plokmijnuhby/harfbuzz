@@ -56,7 +56,13 @@ static hb_bool_t trace(hb_buffer_t *buffer,
 int main(int argc, char *argv[]) {
     std::ifstream lookup_names_file("C:/Users/11dli/Carmack/carmack/target/lookup_names.txt");
     int i = 0;
-    while (std::getline (lookup_names_file, lookup_names[i])) i++;
+    int lookup = 0;
+    std::string lookup_name = argv[1];
+    while (std::getline (lookup_names_file, lookup_names[i])) {
+      if (lookup_names[i] == lookup_name) { lookup = i; }
+      i++;
+    }
+    if (lookup == 0) { lookup = stoi (lookup_name); }
 
     hb_blob_t *blob = hb_blob_create_from_file("C:/Users/11dli/Carmack/carmack/target/Carmack.otf");
     hb_face_t *face = hb_face_create(blob, 0);
@@ -69,7 +75,7 @@ int main(int argc, char *argv[]) {
     hb_buffer_t *buffer = hb_buffer_create();
     hb_buffer_add_utf8(buffer, input, -1, 0, -1);
     hb_buffer_guess_segment_properties(buffer);
-    hb_buffer_set_message_func(buffer, trace, atoi(argv[1]));
+    hb_buffer_set_message_func (buffer, trace, lookup);
 
     hb_shape(font, buffer, NULL, 0);
     

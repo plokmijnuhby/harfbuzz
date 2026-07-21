@@ -2317,4 +2317,9 @@ hb_buffer_set_message_func (hb_buffer_t *buffer, hb_buffer_message_func_t func,
     buffer->breakpoint = -1;
   }
 }
+
+void hb_buffer_set_debug (hb_buffer_t *buffer, bool debugging, bool continuing) {
+    buffer->debugging = debugging;
+    buffer->continuing = continuing;
+}
 #endif

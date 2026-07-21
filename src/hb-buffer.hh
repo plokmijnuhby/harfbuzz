@@ -131,6 +131,7 @@ struct hb_buffer_t
 
 #ifndef HB_NO_BUFFER_MESSAGE
   hb_buffer_message_func_t message_func;
+  bool continuing = true;
   bool debugging;
   int breakpoint;
   hb_destroy_func_t message_destroy;

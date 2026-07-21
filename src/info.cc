@@ -11,7 +11,7 @@
 std::string lookup_names[8192];
 std::string last_command = "s";
 
-static hb_bool_t trace(hb_buffer_t *buffer,
+static void trace(hb_buffer_t *buffer,
     const char* type,
     const unsigned int lookup_index,
     const unsigned int parent_index,
@@ -44,8 +44,15 @@ static hb_bool_t trace(hb_buffer_t *buffer,
       }
       printf ("\n");
     }
-    else if (text[0] == 's') { return true; }
-    else if (text[0] == 'o') { return false; }
+    else if (text[0] == 's') { return; }
+    else if (text[0] == 'n') {
+      hb_buffer_set_debug (buffer, false, false);
+      return;
+    }
+    else if (text[0] == 'c') {
+      hb_buffer_set_debug (buffer, false, true);
+      return;
+    }
     else
     {
       hb_buffer_set_message_func (buffer, trace, stoi (text));
